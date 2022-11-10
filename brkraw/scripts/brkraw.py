@@ -178,6 +178,7 @@ def main():
                         print('NifTi file is generated... [{}]'.format(output_fname))
                     except:
                         print('Conversion failed: ScanID:{}, RecoID:{}'.format(str(scan_id), str(reco_id)))
+                        raise
             else:
                 for scan_id, recos in study._pvobj.avail_reco_id.items():
                     acqpars  = study.get_acqp(int(scan_id))
@@ -194,6 +195,7 @@ def main():
                                 print('NifTi file is generated... [{}]'.format(output_fname))
                             except:
                                 print('Conversion failed: ScanID:{}, RecoID:{}'.format(str(scan_id), str(reco_id)))
+                                raise
         else:
             print('{} is not PvDataset.'.format(path))
 
@@ -258,6 +260,7 @@ def main():
                                     save_meta_files(study, args, scan_id, reco_id, output_fname)
                                 except:
                                     print('Conversion failed: ScanID:{}, RecoID:{}'.format(str(scan_id), str(reco_id)))
+                                    raise
                     print('{} is converted...'.format(raw))
                 else:
                     print('{} does not contains any scan data to convert...'.format(raw))
