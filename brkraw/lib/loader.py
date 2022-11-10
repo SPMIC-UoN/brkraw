@@ -824,20 +824,35 @@ class BrukerLoader():
     @staticmethod
     def _get_bdata(method):
         # [220201] parse the input value directly instead of final values & remove bmat
-        bval = get_value(method, 'PVM_DwBvalEach')
-        bval = [bval] if isinstance(bval, int) else bval
+        bval_in = get_value(method, 'PVM_DwBvalEach')
+        bval_in = [bval_in] if isinstance(bval_in, int) else bval_in
         num_b0 = get_value(method, 'PVM_DwAoImages')
         num_exp = get_value(method, 'PVM_DwNDiffExp')
         num_dir = int((num_exp - num_b0) / len(bval))
         bdir = get_value(method, 'PVM_DwDir')
-        bvals = np.r_[np.zeros(num_b0), np.concatenate([bval for i in np.ones(num_dir).astype(int)], axis=0)]
-        bvecs = np.concatenate([np.zeros([num_b0, 3])] + [bdir] * len(bval), axis=0).T
+        bvals_in = np.r_[np.zeros(num_b0), np.concatenate([bval for i in np.ones(num_dir).astype(int)], axis=0)]
+        bvecs_in = np.concatenate([np.zeros([num_b0, 3])] + [bdir] * len(bval), axis=0).T
+
+        bvals = get_value(method, 'PVM_DwEffBval')
+        bvecs = get_value(method, 'PVM_DwGradVec').T # to have three rows instead of three columns
+
+        #bmat = get_value(method, 'PVM_DwBMat')
+        #print("Effective BVAL/BVEC")
+        #print(bvals)
+        #print(bvecs)
+        #print("Input BVAL/BVEC")
+        #print(bvals_in)
+        #print(bvecs_in)
+        #gradient_orient = get_value(method, 'PVM_SPackArrGradOrient')
+        #print("GRAD gradient orient", gradient_orient)
+
         # test if results are correctly built
         try:
             assert(bvals.shape[0] == num_exp)
             assert(bvecs.shape[-1] == num_exp)
         except:
             raise UnexpectedError('Exceptional case is reported, please report on issue at brkraw github')
+
         return bvals, bvecs
 
     # Generals
