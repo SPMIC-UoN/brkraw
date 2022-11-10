@@ -828,12 +828,12 @@ class BrukerLoader():
         bval_in = [bval_in] if isinstance(bval_in, int) else bval_in
         num_b0 = get_value(method, 'PVM_DwAoImages')
         num_exp = get_value(method, 'PVM_DwNDiffExp')
-        num_dir = int((num_exp - num_b0) / len(bval))
+        num_dir = int((num_exp - num_b0) / len(bval_in))
         bdir = get_value(method, 'PVM_DwDir')
-        bvals_in = np.r_[np.zeros(num_b0), np.concatenate([bval for i in np.ones(num_dir).astype(int)], axis=0)]
-        bvecs_in = np.concatenate([np.zeros([num_b0, 3])] + [bdir] * len(bval), axis=0).T
+        bvals_in = np.r_[np.zeros(num_b0), np.concatenate([bval_in for i in np.ones(num_dir).astype(int)], axis=0)]
+        bvecs_in = np.concatenate([np.zeros([num_b0, 3])] + [bdir] * len(bval_in), axis=0).T
 
-        bvals = get_value(method, 'PVM_DwEffBval')
+        bvals = np.array(get_value(method, 'PVM_DwEffBval'))
         bvecs = get_value(method, 'PVM_DwGradVec').T # to have three rows instead of three columns
 
         #bmat = get_value(method, 'PVM_DwBMat')
